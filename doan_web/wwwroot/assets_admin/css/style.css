@@ -1,0 +1,67 @@
+.single-file-preview img {
+    -moz-box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.07);
+    -webkit-box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.07);
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.07);
+    width: 100%;
+    margin-bottom: 20px;
+}
+.single-file-preview input[type=file] {
+    -moz-transition: 0.3s ease;
+    -webkit-transition: 0.3s ease;
+    transition: 0.3s ease;
+    width: 100%;
+    padding-top: 40px;
+    height: 30px;
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+.single-file-preview input[type=file]:hover {
+    border: 2px solid rgba(0, 0, 0, 0.2);
+}
+.single-file-preview .input {
+    position: relative;
+}
+.single-file-preview .input span {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 13px;
+    font-size: 12px;
+    z-index: -1;
+}
+.file-upload {
+    position: relative;
+    height: 100px;
+    margin-bottom: 20px;
+}
+.file-upload .file-upload-input {
+    -moz-transition: 0.3s ease;
+    -webkit-transition: 0.3s ease;
+    transition: 0.3s ease;
+    width: 100%;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    height: 100px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    padding: 100px 0 0 0;
+    overflow: hidden;
+    z-index: 1;
+}
+.file-upload .file-upload-input:hover {
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.02);
+}
+.file-upload span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    line-height: 105px;
+    width: 100%;
+    text-align: center;
+    margin: auto;
+    z-index: 0;
+    left: 0;
+}
