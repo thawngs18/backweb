@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
 using doan_web.Models;
 
 namespace doan_web.Controllers

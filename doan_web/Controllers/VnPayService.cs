@@ -6,10 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-
 using doan_web.Models;
 
-namespace doan_web.Controllers
+namespace DatDoAn.Controllers
 {
     public class VnPayService
     {
@@ -29,11 +28,11 @@ namespace doan_web.Controllers
 
             string vnp_TmnCode = "0S7T01T8";  // TmnCode từ cấu hình
             string vnp_HashSecret = "BEZLUPOPOTXTDYZHCBGDJBHFJPBLSARL";  // Secret key
-            string vnp_BaseUrl = "https://localhost:7028/Cart/PaymentCallback";  // URL callback
+            string vnp_BaseUrl = "https://localhost:7092/Cart/PaymentCallback";  // URL callback
             string vnp_CurrCode = "VND";  // Mã tiền tệ
             string vnp_Locale = "vn";  // Ngôn ngữ
             string vnp_IpAddr = "127.0.0.1";  // Địa chỉ IP
-            string vnp_ReturnUrl = "https://localhost:7028/Cart/PaymentCallback";  // URL callback khi trả về
+            string vnp_ReturnUrl = "https://localhost:7092/Cart/PaymentCallback";  // URL callback khi trả về
 
             // Lấy thời gian hiện tại theo múi giờ Việt Nam
             var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");

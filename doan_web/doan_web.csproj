@@ -7,6 +7,35 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\domains.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\cs.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\da.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\de.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\de_ch.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\el.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\en.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\es.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\fi.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\fr.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\hi.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\hu.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\it.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\ja.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\ko.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\nl.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\no.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\pl.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\pt.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\ru.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\sv.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\th.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\tr.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\vi.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\zh.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\rtl\ar.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\rtl\fa.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\special\emoji.txt" />
+    <Content Remove="C:\Users\ASUS\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\special\global.txt" />
     <Content Remove="C:\Users\TQL\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\domains.txt" />
     <Content Remove="C:\Users\TQL\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\cs.txt" />
     <Content Remove="C:\Users\TQL\.nuget\packages\boganet.badwordfilter\1.4.0\contentFiles\any\net8.0\Resources\Filters\ltr\da.txt" />
@@ -42,7 +71,6 @@
     <PackageReference Include="BogaNet.BadWordFilter" Version="1.4.0" />
     <PackageReference Include="Bunkum.ProfanityFilter" Version="4.7.0" />
     <PackageReference Include="CleanLanguage" Version="1.0.0" />
-    <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">

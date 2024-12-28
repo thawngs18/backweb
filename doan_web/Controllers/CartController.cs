@@ -1,4 +1,4 @@
-﻿
+﻿using DatDoAn.Controllers;
 using doan_web.Controllers;
 using doan_web.Models;
 using Microsoft.AspNetCore.Hosting;
@@ -293,7 +293,7 @@ namespace doan_web.Controllers
         { "vnp_OrderInfo", "Thanhtoan" },
         { "vnp_OrderType", model.OrderType },
         { "vnp_Locale", "vn" },
-        { "vnp_ReturnUrl", "https://localhost:7028/Cart/PaymentCallback" },
+        { "vnp_ReturnUrl", "https://localhost:7092/Cart/PaymentCallback" },
         { "vnp_IpAddr", vnp_IpAddr },
         { "vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss") }
     };

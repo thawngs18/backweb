@@ -3,7 +3,7 @@ using doan_web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace doan_web.Controllers
+namespace DatDoAn.Controllers
 {
     public class MenuController : Controller
     {
