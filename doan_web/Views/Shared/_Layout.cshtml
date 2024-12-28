@@ -1,50 +1,176 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <!-- Basic -->
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - doan_web</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/doan_web.styles.css" asp-append-version="true" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="~/images/banner/b1.png" type="" />
+
+    <title>Feane</title>
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="~/css/bootstrap.css" />
+
+    <!-- Font Awesome CSS -->
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="~/css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="~/css/responsive.css" rel="stylesheet" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">doan_web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+
+    <div>
+
+        <!-- header section starts -->
+        <header class="header_section">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg custom_nav-container">
+                    <!-- Logo + Nút hamburger -->
+                    <div class="d-flex align-items-center">
+                        <a class="navbar-brand brand-name" href="/Home">
+                            <span>Elsol</span>
+                        </a>
+
+                        <button class="navbar-toggler"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#navbarSupportedContent"
+                                aria-controls="navbarSupportedContent"
+                                aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <span class=""></span>
+                        </button>
+                    </div>
+
+                    <!-- Menu -->
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mx-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Menu">Menu</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/About">About</a>
+                            </li>
+                        </ul>
+
+                        @if (Context.Session.GetString("TaiKhoan") != null)
+                        {
+                            <div class="user_option">
+                                <a href="/Cart/Index" class="order_online">
+                                    <i class="fa fa-shopping-cart"></i> <!-- Icon giỏ hàng -->
+                                    <span id="cart-count">0</span>
+                                </a>
+                            </div>
+                            <div class="user_option">
+                                <a href="/Home/MyOrders" class="order_online">Đơn hàng của tôi</a>
+                            </div>
+                            <div class="user_option">
+                                <a href="/Home/Logout" class="order_online">Đăng xuất</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="user_option">
+                                <a href="/Home/Login" class="order_online">Đăng nhập</a>
+                            </div>
+
+                            <div class="user_option">
+                                <a href="/Home/DangKy" class="order_online">Đăng ký</a>
+                            </div>
+                        }
+                    </div>
+                </nav>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </header>
     </div>
 
-    <footer class="border-top footer text-muted">
+    @RenderBody()
+
+
+
+
+    <!-- Footer Section -->
+    <footer class="footer_section">
         <div class="container">
-            &copy; 2024 - doan_web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-md-4 footer-col">
+                    <div class="footer_contact">
+                        <h4>Contact Us</h4>
+                        <div class="contact_link_box">
+                            <a href="">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <span> Location </span>
+                            </a>
+                            <a href="">
+                                <i class="fa fa-phone" aria-hidden="true"></i>
+                                <span> Call +01 1234567890 </span>
+                            </a>
+                            <a href="">
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                                <span> demo@gmail.com </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-col">
+                    <div class="footer_detail">
+                        <a href="" class="footer-logo"> Feane </a>
+                        <p>
+                            Necessary, making this the first true generator on the Internet.
+                            It uses a dictionary of over 200 Latin words, combined with
+                        </p>
+                        <div class="footer_social">
+                            <a href="">
+                                <i class="fa fa-facebook" aria-hidden="true"></i>
+                            </a>
+                            <a href="">
+                                <i class="fa fa-twitter" aria-hidden="true"></i>
+                            </a>
+                            <a href="">
+                                <i class="fa fa-linkedin" aria-hidden="true"></i>
+                            </a>
+                            <a href="">
+                                <i class="fa fa-instagram" aria-hidden="true"></i>
+                            </a>
+                            <a href="">
+                                <i class="fa fa-pinterest" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 footer-col">
+                    <h4>Opening Hours</h4>
+                    <p>Everyday</p>
+                    <p>10.00 Am -10.00 Pm</p>
+                </div>
+            </div>
+            <div class="footer-info">
+                <p>
+                    &copy; <span id="displayYear"></span> All Rights Reserved By
+                    <a href="https://html.design/">Free Html Templates</a><br /><br />
+                    &copy; <span id="displayYear"></span> Distributed By
+                    <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+                </p>
+            </div>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- jQuery -->
+    <script src="~/js/jquery-3.4.1.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/js/bootstrap.js"></script>
+    <!-- Custom JS -->
+    <script src="~/js/custom.js"></script>
 </body>
 </html>

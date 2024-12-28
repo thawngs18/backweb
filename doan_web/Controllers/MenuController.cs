@@ -1,4 +1,5 @@
-﻿using doan_web.Models;
+﻿
+using doan_web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,6 @@ namespace doan_web.Controllers
             _context = context;
         }
 
-        // Index action to fetch categories and products
         public IActionResult Index(string category)
         {
             // Retrieve all categories
@@ -26,9 +26,14 @@ namespace doan_web.Controllers
 
             if (!string.IsNullOrEmpty(category))
             {
+                // Filter by category
                 productsQuery = productsQuery.Where(sp => sp.LoaiSanPham.Ten.ToLower() == category.ToLower());
             }
 
+            // Filter products where SoLuong > 0
+            productsQuery = productsQuery.Where(sp => sp.SoLuong > 0);
+
+            // Get the filtered products
             var products = productsQuery.ToList();
 
             // Pass both categories and products to the view
@@ -40,6 +45,7 @@ namespace doan_web.Controllers
 
             return View(viewModel);
         }
+
 
 
         // Action to display the details of a specific product

@@ -1,0 +1,272 @@
+﻿@model ProductDetailViewModel
+@{
+    Layout = null;
+}
+<!-- Import Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<!-- Import FontAwesome for the star icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+
+<style>
+    /* General Style for the Product Detail Section */
+    body {
+        background-color: #222831; /* Updated background color */
+        color: white; /* Set default text color to white */
+    }
+
+    .product_detail_section {
+        padding-bottom: 50px;
+        background-color: #222831; /* Keep the background color consistent */
+    }
+
+    .product_detail_box {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+        .product_detail_box .img-box img {
+            border-radius: 10px;
+            max-height: 400px;
+            object-fit: cover;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product_detail_box .detail-box h5 {
+            font-size: 24px;
+            font-weight: 600;
+            color: white; /* Set product name color to white */
+            margin-bottom: 15px;
+        }
+
+        .product_detail_box .detail-box p {
+            font-size: 16px;
+            color: #ddd; /* Set description text to light gray for contrast */
+            margin-bottom: 15px;
+        }
+
+        .product_detail_box .detail-box h6 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e74c3c; /* Keep the price color in red */
+            margin-bottom: 20px;
+        }
+
+        /* Button Styling */
+        .product_detail_box .btn-primary {
+            background-color: #ffbe33;
+            border-color: #ffbe33;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px 25px;
+            transition: all 0.3s ease;
+        }
+
+            .product_detail_box .btn-primary:hover {
+                background-color: #ffbe33;
+                border-color: #ffbe33;
+                transform: translateY(-3px);
+            }
+
+    /* Feedback Section */
+    .feedback_section h4 {
+        font-size: 24px;
+        font-weight: 600;
+        color: white; /* Set header text color to white */
+        margin-bottom: 20px;
+    }
+
+    .feedback-item {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+
+        .feedback-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .feedback-item p {
+            font-size: 16px;
+            color: white; /* Set feedback text color to white */
+            margin-bottom: 10px;
+        }
+
+        .feedback-item .rating {
+            margin-bottom: 10px;
+        }
+
+            .feedback-item .rating i {
+                color: #f1c40f;
+                font-size: 18px;
+            }
+
+    /* Feedback Form */
+    .feedback_section .rating-form {
+        display: flex;
+        justify-content: space-between;
+        width: 120px;
+    }
+
+        .feedback_section .rating-form input[type="radio"] {
+            display: none;
+        }
+
+        .feedback_section .rating-form label {
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .feedback_section .rating-form input[type="radio"]:checked ~ label,
+        .feedback_section .rating-form input[type="radio"]:checked ~ label ~ label {
+            color: #f1c40f;
+        }
+
+        .feedback_section .rating-form label:hover {
+            color: #ffb800;
+        }
+
+    /* Form Styling */
+    .feedback_section form .form-group textarea {
+        width: 100%;
+        height: 150px;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        color: white; /* Set text color inside the text area to white */
+        transition: all 0.3s ease;
+    }
+
+        .feedback_section form .form-group textarea:focus {
+            border-color: #2ecc71;
+            outline: none;
+        }
+
+    .feedback_section .btn-success {
+        background-color: #ffbe33;
+        border-color: #ffbe33;
+        font-size: 18px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .feedback_section .btn-success:hover {
+            background-color: #ffbe33;
+            border-color: #ffbe33;
+            transform: translateY(-3px);
+        }
+
+    /* Responsive Design */
+    .product_detail_box .img-box img {
+        max-height: 300px;
+    }
+
+    .product_detail_box .detail-box {
+        margin-top: 20px;
+    }
+
+    .product_detail_box .btn-primary {
+        width: 100%;
+    }
+
+    .feedback_section .rating-form {
+        justify-content: space-evenly;
+        width: 160px;
+    }
+
+    .feedback_section form .form-group textarea {
+        height: 120px;
+    }
+</style>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<section class="product_detail_section layout_padding-bottom">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>@Model.Product.Ten</h2>
+        </div>
+
+        <!-- Product Detail Section -->
+        <div class="product_detail_box row">
+            <div class="col-md-6">
+                <div class="img-box">
+                    <img src="~/imgs/@Model.Product.img" alt="@Model.Product.Ten" class="img-fluid" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-box">
+                    <h5>@Model.Product.Ten</h5>
+                    <p>@Model.Product.MoTa</p>
+                    <h6>@string.Format("{0:N0}", @Model.Product.GiaBan) VND</h6>
+                    <a href="@Url.Action("AddToCart", "Cart", new { productId = Model.Product.Id })" class="btn btn-primary">Thêm vào giỏ hàng</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div class="feedback_section mt-5">
+            <h4>Phản hồi của khách hàng</h4>
+            <div class="feedback-list">
+                @foreach (var feedback in Model.Feedbacks)
+                {
+                    <div class="feedback-item mb-4">
+                        <p><strong>@feedback.KhachHang.Ten</strong></p>
+                        <div class="rating">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= feedback.SoSao)
+                                {
+                                    <i class="fas fa-star"></i> <!-- Full Star -->
+                                }
+                                else
+                                {
+                                    <i class="far fa-star"></i> <!-- Empty Star -->
+                                }
+                            }
+                        </div>
+                        <p>@feedback.NoiDung</p>
+                    </div>
+                }
+            </div>
+
+            <!-- Feedback Form -->
+            <h5>Để lại phản hồi</h5>
+            <form method="post" action="@Url.Action("SubmitFeedback", "Menu", new { productId = Model.Product.Id })">
+                <div class="form-group">
+                    <textarea name="Content" class="form-control" placeholder="Hãy viết phản hồi của bạn ở đây..." required></textarea>
+                </div>
+
+                <!-- Star Rating -->
+                <div class="rating-form mt-2">
+                    @for (int i = 5; i >= 1; i--)
+                    {
+                        <input type="radio" name="stars" value="@i" id="star-@i" required />
+                        <label for="star-@i" class="fa fa-star"></label>
+                    }
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success btn-lg">Gửi Phản Hồi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

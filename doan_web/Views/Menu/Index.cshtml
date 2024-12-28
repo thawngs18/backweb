@@ -1,0 +1,55 @@
+﻿<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<section class="food_section layout_padding-bottom">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>Our Menu</h2>
+        </div>
+
+        <!-- Filters Menu (Categories) -->
+        <ul class="filters_menu">
+            <li class="@(string.IsNullOrEmpty(Context.Request.Query["category"]) ? "active" : "")">
+                <a href="@Url.Action("Index", "Menu", new { category = (string)null })">All</a>
+            </li>
+            @foreach (var category in Model.Categories)
+            {
+                <li class="@(Context.Request.Query["category"] == category.Ten ? "active" : "")">
+                    <a href="@Url.Action("Index", "Menu", new { category = category.Ten })">@category.Ten</a>
+                </li>
+            }
+        </ul>
+
+        <!-- Products Section -->
+        <div class="filters-content">
+            <div class="row grid">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col-sm-6 col-lg-4 all @product.LoaiSanPham.Ten.ToLower()">
+                        <div class="box">
+                            <div>
+                                <div class="img-box">
+                                    <img src="~/imgs/@product.img" alt="@product.Ten" />
+                                </div>
+                                <div class="detail-box">
+                                    <h5>@product.Ten</h5>
+                                    <p>@product.MoTa</p>
+                                    <div class="options">
+                                        <h6>@product.GiaBan VND</h6>
+                                        <!-- Link to Product Detail Page -->
+                                        <a href="@Url.Action("Detail", "Menu", new { productId = product.Id })" class="view-detail-link">
+                                            <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
+                                        </a>
+
+                                        <!-- Add to Cart as an icon -->
+                                        <a href="@Url.Action("AddToCart", "Cart", new { productId = product.Id })" class="add-to-cart-link">
+                                            <i class="fas fa-cart-plus"></i> <!-- Font Awesome cart icon -->
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

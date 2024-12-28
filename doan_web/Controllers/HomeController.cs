@@ -1,3 +1,4 @@
+﻿
 using doan_web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +55,7 @@ namespace doan_web.Controllers
 
             if (existingUser != null)
             {
-                ViewBag.ThongBao = "T�i kho?n ho?c email d� t?n t?i.";
+                ViewBag.ThongBao = "Tài khoản hoặc email đã tồn tại.";
                 return View(khachHang);
             }
 
@@ -80,7 +81,7 @@ namespace doan_web.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Error during registration process: {ex.Message}");
-                ViewBag.ThongBao = "�� c� l?i x?y ra trong qu� tr�nh dang k�.";
+                ViewBag.ThongBao = "Đã có lỗi xảy ra trong quá trình đăng ký.";
                 return View(khachHang);
             }
         }
@@ -121,46 +122,46 @@ namespace doan_web.Controllers
 
         public IActionResult GetOrderDetails(int id)
         {
-            // Truy v?n don h�ng c�ng v?i c�c chi ti?t li�n quan
+            // Truy vấn đơn hàng cùng với các chi tiết liên quan
             var order = _context.DonHang
                 .Include(d => d.ChiTietDonHangs)
                 .ThenInclude(c => c.SanPham)
-                .Include(d => d.KhachHang)  // Th�m th�ng tin kh�ch h�ng
-                .Include(d => d.NhanVien)   // Th�m th�ng tin nh�n vi�n (n?u c�)
+                .Include(d => d.KhachHang)  // Thêm thông tin khách hàng
+                .Include(d => d.NhanVien)   // Thêm thông tin nhân viên (nếu có)
                 .FirstOrDefault(d => d.Id == id);
 
             if (order == null)
             {
-                return Content("Kh�ng t�m th?y don h�ng.");
+                return Content("Không tìm thấy đơn hàng.");
             }
 
-            // T?o HTML d? hi?n th? th�ng tin don h�ng
-            var orderDetailsHtml = "<h4>Th�ng tin don h�ng</h4>";
+            // Tạo HTML để hiển thị thông tin đơn hàng
+            var orderDetailsHtml = "<h4>Thông tin đơn hàng</h4>";
 
-            // Th�ng tin kh�ch h�ng v� nh�n vi�n
-            orderDetailsHtml += "<p><strong>Kh�ch h�ng:</strong> " + order.KhachHang?.Ten ?? "Chua c� t�n kh�ch h�ng" + "</p>";
+            // Thông tin khách hàng và nhân viên
+            orderDetailsHtml += "<p><strong>Khách hàng:</strong> " + order.KhachHang?.Ten ?? "Chưa có tên khách hàng" + "</p>";
 
-            // Th�ng tin don h�ng
-            orderDetailsHtml += "<p><strong>M� don h�ng:</strong> " + order.Id + "</p>";
-            orderDetailsHtml += "<p><strong>Ng�y d?t:</strong> " + order.NgayDat.ToString("dd/MM/yyyy") + "</p>";
-            orderDetailsHtml += "<p><strong>�?a ch? giao h�ng:</strong> " + order.DiaChi + ", " + order.QuanHuyen + ", " + order.ThanhPho + "</p>";
-            orderDetailsHtml += "<p><strong>S? di?n tho?i:</strong> " + order.SoDienThoai + "</p>";
-            orderDetailsHtml += "<p><strong>Tr?ng th�i:</strong> " +
-    (order.Status == -1 ? "Ch? x�c nh?n" :
-    order.Status == 0 ? "�� hu?" :
-    order.Status == 1 ? "�ang giao h�ng" :
-    order.Status == 2 ? "�� giao h�ng" :
-    "Kh�ng x�c d?nh") + "</p>";
+            // Thông tin đơn hàng
+            orderDetailsHtml += "<p><strong>Mã đơn hàng:</strong> " + order.Id + "</p>";
+            orderDetailsHtml += "<p><strong>Ngày đặt:</strong> " + order.NgayDat.ToString("dd/MM/yyyy") + "</p>";
+            orderDetailsHtml += "<p><strong>Địa chỉ giao hàng:</strong> " + order.DiaChi + ", " + order.QuanHuyen + ", " + order.ThanhPho + "</p>";
+            orderDetailsHtml += "<p><strong>Số điện thoại:</strong> " + order.SoDienThoai + "</p>";
+            orderDetailsHtml += "<p><strong>Trạng thái:</strong> " +
+    (order.Status == -1 ? "Chờ xác nhận" :
+    order.Status == 0 ? "Đã huỷ" :
+    order.Status == 1 ? "Đang giao hàng" :
+    order.Status == 2 ? "Đã giao hàng" :
+    "Không xác định") + "</p>";
 
-            // B?ng th�ng tin chi ti?t don h�ng
-            orderDetailsHtml += "<h3>Chi ti?t s?n ph?m trong don h�ng</h3>";
-            orderDetailsHtml += "<table class='table table-striped'><thead><tr><th>S?n ph?m</th><th>S? lu?ng</th><th>�on gi�</th><th>T?ng</th></tr></thead><tbody>";
+            // Bảng thông tin chi tiết đơn hàng
+            orderDetailsHtml += "<h3>Chi tiết sản phẩm trong đơn hàng</h3>";
+            orderDetailsHtml += "<table class='table table-striped'><thead><tr><th>Sản phẩm</th><th>Số lượng</th><th>Đơn giá</th><th>Tổng</th></tr></thead><tbody>";
 
             foreach (var item in order.ChiTietDonHangs)
             {
-                var productName = item.SanPham?.Ten ?? "Chua c� t�n s?n ph?m";
-                var quantity = item.SoLuong; // Ki?m tra s? lu?ng c� th? null
-                var unitPrice = item.DonGia; // Ki?m tra don gi� c� th? null
+                var productName = item.SanPham?.Ten ?? "Chưa có tên sản phẩm";
+                var quantity = item.SoLuong; // Kiểm tra số lượng có thể null
+                var unitPrice = item.DonGia; // Kiểm tra đơn giá có thể null
 
                 orderDetailsHtml += $"<tr><td>{productName}</td><td>{quantity}</td><td>{unitPrice} VND</td><td>{(quantity * unitPrice)} VND</td></tr>";
             }
@@ -168,7 +169,7 @@ namespace doan_web.Controllers
             orderDetailsHtml += "</tbody></table>";
 
             var totalAmount = order.TongTien;
-            orderDetailsHtml += $"<p><strong>T?ng ti?n:</strong> {totalAmount} VND</p>";
+            orderDetailsHtml += $"<p><strong>Tổng tiền:</strong> {totalAmount} VND</p>";
 
             return Content(orderDetailsHtml);
         }
@@ -208,7 +209,7 @@ namespace doan_web.Controllers
                 {
                     if (_context.KhachHang.Any(k => k.TaiKhoan == TaiKhoan))
                     {
-                        ViewBag.ThongBao = "B?n kh�ng th? dang nh?p l� nh�n vi�n khi b?n l� kh�ch h�ng!";
+                        ViewBag.ThongBao = "Bạn không thể đăng nhập là nhân viên khi bạn là khách hàng!";
                         return View();
                     }
 
@@ -218,7 +219,7 @@ namespace doan_web.Controllers
                     return RedirectToAction("Dashboard", "Admin");
                 }
 
-                ViewBag.ThongBao = "T�i kho?n ho?c m?t kh?u kh�ng d�ng!";
+                ViewBag.ThongBao = "Tài khoản hoặc mật khẩu không đúng!";
             }
 
             return View();

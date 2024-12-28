@@ -1,0 +1,228 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Thêm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/assets_admin/images/favicon.ico">
+
+    <!-- App css -->
+    <link href="~/assets_admin/libs/dropzone/dropzone.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets_admin/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets_admin/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets_admin/css/app.min.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        .profile-picture img {
+            max-width: 200px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+        }
+
+        .form-group img {
+            max-width: 200px;
+            max-height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Begin page -->
+    <div id="wrapper">
+
+        <!-- Topbar Start -->
+        <div class="navbar-custom">
+            <ul class="list-unstyled topnav-menu float-right mb-0">
+                <li class="dropdown notification-list">
+                    <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown"
+                       href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                        <span class="ml-1">@User.Identity.Name <i class="mdi mdi-chevron-down"></i></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                        <!-- item-->
+                        <div class="dropdown-header noti-title">
+                            <h6 class="text-overflow m-0">Chào mừng!</h6>
+                        </div>
+
+                        <!-- item-->
+                        <a href="@Url.Action("Profile", "Admin")" class="dropdown-item notify-item">
+                            <i class="fe-user"></i>
+                            <span>Thông tin cá nhân</span>
+                        </a>
+
+                        <!-- item-->
+                        <a href="@Url.Action("Logout", "Account")" class="dropdown-item notify-item">
+                            <i class="fe-log-out"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- end Topbar -->
+
+        <!-- Left Sidebar Start -->
+        <div class="left-side-menu">
+            <div class="slimscroll-menu">
+                <!-- Sidemenu -->
+                <div id="sidebar-menu">
+                   <ul class="metismenu" id="side-menu">
+
+                        <li class="menu-title">QUẢN LÝ</li>
+
+                        <li>
+                            <a href="@Url.Action("Dashboard", "Admin")">
+                                <i class="fe-airplay"></i>
+                                <span> Dashboard </span>
+                            </a>
+                        </li>
+
+
+                        <li>
+                            <a href="@Url.Action("Index", "LoaiSanPham")">
+                                <i class="fe-disc"></i>
+                                Quản lý loại sản phẩm
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("Index", "SanPham")">
+                                <i class="fe-disc"></i>
+                                Quản lý sản phẩm
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("Index", "DonHang")">
+                                <i class="fe-disc"></i>
+                                Quản lý đơn hàng
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- End Sidebar -->
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!-- Left Sidebar End -->
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+        <div class="content-page">
+            <div class="content">
+                <!-- Start Content-->
+                <div class="container-fluid">
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Forms</a></li>
+                                        <li class="breadcrumb-item active">Form Validation</li>
+                                    </ol>
+                                </div>
+                                <h4 class="page-title">Thêm thông tin</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="card-box">
+                                <form class="parsley-examples" id="myForm" action="@Url.Action("Create", "SanPham")" method="post" enctype="multipart/form-data">
+                                    @Html.AntiForgeryToken()
+
+                                    <!-- Ten -->
+                                    <div class="form-group">
+                                        <label for="Ten">Tên sản phẩm</label>
+                                        <input type="text" class="form-control" required placeholder="Nhập tên sản phẩm" id="Ten" name="Ten" value="@ViewData["Ten"]" />
+                                    </div>
+
+                                    <!-- SoLuong -->
+                                    <div class="form-group">
+                                        <label for="SoLuong">Số lượng</label>
+                                        <input type="number" class="form-control" required placeholder="Nhập số lượng" id="SoLuong" name="SoLuong" value="@ViewData["SoLuong"]" />
+                                    </div>
+
+                                    <!-- GiaBan -->
+                                    <div class="form-group">
+                                        <label for="GiaBan">Giá bán</label>
+                                        <input type="number" class="form-control" required placeholder="Nhập giá bán" id="GiaBan" name="GiaBan" value="@ViewData["GiaBan"]" />
+                                    </div>
+
+                                    <!-- Image Upload -->
+                                    <div class="form-group">
+                                        <label for="Image">Ảnh sản phẩm</label>
+                                        <input type="file" class="form-control" id="img" name="img" accept="image/*" />
+                                    </div>
+
+                                    <!-- LoaiSanPham (Dropdown) -->
+                                    <div class="form-group">
+                                        <label for="IDLoaiSP">Loại sản phẩm</label>
+                                        @Html.DropDownList("IDLoaiSP", (SelectList)ViewBag.LoaiSanPhams, "Chọn loại sản phẩm", new { @class = "form-control" })
+                                    </div>
+
+                                    <!-- Submit and Reset buttons -->
+                                    <div class="form-group mb-0">
+                                        <div>
+                                            <button type="submit" class="btn btn-gradient waves-effect waves-light">
+                                                Lưu sản phẩm
+                                            </button>
+                                            <button type="reset" class="btn btn-light waves-effect ml-1">
+                                                <a href="@Url.Action("Index", "SanPham")">Danh sách sản phẩm</a>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+                </div> <!-- end container-fluid -->
+            </div> <!-- end content -->
+
+            <!-- Footer Start -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            2017 - 2019 &copy; Dashboard theme by <a href="">SWP391</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- end Footer -->
+
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page content -->
+        <!-- ============================================================== -->
+    </div>
+
+    <!-- Vendor js -->
+    <script src="~/assets_admin/js/vendor.min.js"></script>
+
+    <!-- Plugin js-->
+    <script src="~/assets_admin/assets/libs/parsleyjs/parsley.min.js"></script>
+
+    <!-- Validation init js-->
+    <script src="~/assets_admin/assets/js/pages/form-validation.init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- App js -->
+    <script src="~/assets_admin/js/app.min.js"></script>
+</body>
+</html>

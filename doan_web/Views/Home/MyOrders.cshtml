@@ -1,0 +1,188 @@
+﻿@model IEnumerable<DonHang>
+
+@{
+    ViewData["Title"] = "Đơn hàng của tôi";
+    Layout = null;
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+
+<style>
+    body {
+        background-color: rgba(8, 8, 8, 0.8);
+        color: #ffffff;
+        font-family: 'Arial', sans-serif;
+    }
+
+    h2 {
+        font-size: 28px;
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .container {
+        margin-top: 40px;
+    }
+
+    .table {
+        background-color: #222831;
+        border-radius: 8px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    }
+
+        .table th, .table td {
+            vertical-align: middle;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .table th {
+            background-color: #ffbe33;
+            color: #222831;
+        }
+
+    .badge {
+        font-size: 14px;
+        color: #ffffff;
+    }
+
+    .btn-info {
+        background-color: #ffbe33;
+        border-color: #ffbe33;
+        color: #222831;
+        font-weight: 600;
+    }
+
+        .btn-info:hover {
+            background-color: #e0aa2d;
+            border-color: #e0aa2d;
+            color: #ffffff;
+        }
+
+    /* Modal Styles */
+    .modal-content {
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .modal-header {
+        background-color: #ffbe33;
+        color: #222831;
+    }
+
+    .modal-footer {
+        background-color: #222831;
+    }
+
+    .text-center p {
+        font-size: 18px;
+        color: #ffffff;
+    }
+
+    .mt-4 {
+        margin-top: 30px;
+    }
+
+    .mb-4 {
+        margin-bottom: 20px;
+    }
+
+    .modal-body, .modal-footer, .modal-header, .modal-title, .modal-body p {
+        color: #000000 !important;
+    }
+</style>
+
+<h2 class="text-center my-4">Đơn hàng của tôi</h2>
+
+
+
+<div class="container">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.NgayDat.ToString("dd/MM/yyyy")</td>
+                    <td>@order.TongTien.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
+                    <td>
+                        @switch (order.Status)
+                        {
+                            case -1:
+                                <span class="badge badge-warning">Chờ xác nhận</span>
+                                break;
+                            case 0:
+                                <span class="badge badge-danger">Huỷ</span>
+                                break;
+                            case 1:
+                                <span class="badge badge-primary">Đang giao hàng</span>
+                                break;
+                            case 2:
+                                <span class="badge badge-success">Đã giao hàng</span>
+                                break;
+                        }
+                    </td>
+                    <td>
+                        <button class="btn btn-info" data-toggle="modal" data-target="#orderDetailModal" data-order-id="@order.Id">Chi tiết</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for Order Details -->
+<div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderDetailModalLabel">Chi tiết đơn hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="orderDetailsContent">
+                <div class="text-center">
+                    <p>Đang tải chi tiết đơn hàng...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to Home Button -->
+<div class="text-center mb-4">
+    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Quay về trang chủ</a>
+</div>
+
+<script>
+    $('#orderDetailModal').on('show.bs.modal', function (e) {
+        var button = $(e.relatedTarget);
+        var orderId = button.data('order-id');
+
+        $.ajax({
+            url: '@Url.Action("GetOrderDetails", "Home")',
+            data: { id: orderId },
+            success: function (data) {
+                $('#orderDetailsContent').html(data);
+            },
+            error: function () {
+                $('#orderDetailsContent').html('<p>Không thể tải chi tiết đơn hàng. Vui lòng thử lại sau.</p>');
+            }
+        });
+    });
+</script>

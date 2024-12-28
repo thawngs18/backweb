@@ -1,9 +1,12 @@
-﻿using doan_web.Models;
+﻿
+using doan_web.Controllers;
+using doan_web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+
 namespace doan_web.Controllers
 {
     public class DonHangController : Controller

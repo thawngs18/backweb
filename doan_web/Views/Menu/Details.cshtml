@@ -1,0 +1,26 @@
+﻿@model doan_web.Models.SanPham
+
+<section class="product-detail-section">
+    <div class="container">
+        <div class="product-detail-container">
+            <div class="product-img">
+                <img src="~/imgs/@Model.img" alt="@Model.Ten" />
+            </div>
+            <div class="product-info">
+                <h2>@Model.Ten</h2>
+                <p>@Model.MoTa</p>
+                <h4>Price: @Model.GiaBan.ToString("C")</h4>
+
+                <h5>Category: @Model.LoaiSanPham.Ten</h5>
+
+                <div class="add-to-cart">
+                    <a href="#" onclick="addToCart(event)">
+                        <button>Add to Cart</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add any additional product details you want here (e.g., ingredients, preparation, reviews, etc.) -->

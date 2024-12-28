@@ -1,9 +1,12 @@
-﻿using doan_web.Models;
+﻿
+using doan_web.Controllers;
+using doan_web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+
 namespace doan_web.Controllers
 {
     public class SanPhamController : Controller
@@ -124,10 +127,9 @@ namespace doan_web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, string Ten, int SoLuong, decimal GiaBan, int IDLoaiSP, IFormFile img)
+        public async Task<IActionResult> Edit(int id, SanPham sanPham, IFormFile? img)
         {
-            var sanPham = _context.SanPham.Find(id);
-            if (sanPham == null)
+            if (id != sanPham.Id)
             {
                 return NotFound();
             }
@@ -136,11 +138,20 @@ namespace doan_web.Controllers
             {
                 try
                 {
-                    sanPham.Ten = Ten;
-                    sanPham.SoLuong = SoLuong;
-                    sanPham.GiaBan = GiaBan;
-                    sanPham.IDLoaiSP = IDLoaiSP;
+                    // Lấy sản phẩm từ cơ sở dữ liệu
+                    var existingSanPham = await _context.SanPham.FindAsync(id);
+                    if (existingSanPham == null)
+                    {
+                        return NotFound();
+                    }
 
+                    // Cập nhật các thuộc tính của sản phẩm
+                    existingSanPham.Ten = sanPham.Ten;
+                    existingSanPham.SoLuong = sanPham.SoLuong;
+                    existingSanPham.GiaBan = sanPham.GiaBan;
+                    existingSanPham.IDLoaiSP = sanPham.IDLoaiSP;
+
+                    // Kiểm tra và xử lý ảnh nếu có
                     if (img != null)
                     {
                         string fileName = Path.GetFileNameWithoutExtension(img.FileName);
@@ -154,10 +165,11 @@ namespace doan_web.Controllers
                             await img.CopyToAsync(stream);
                         }
 
-                        sanPham.img = fileName;
+                        existingSanPham.img = fileName;
                     }
 
-                    _context.Update(sanPham);
+                    // Cập nhật sản phẩm vào cơ sở dữ liệu
+                    _context.Update(existingSanPham);
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Index));
@@ -168,10 +180,27 @@ namespace doan_web.Controllers
                     ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
                 }
             }
+            else
+            {
+                // Log all validation errors if model state is invalid
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    _logger.LogWarning($"Validation Error: {error.ErrorMessage}");
+                }
+            }
 
+            // Nếu dữ liệu không hợp lệ, repopulate lại dropdown và trả về view
             ViewBag.LoaiSanPhams = new SelectList(_context.LoaiSanPham, "Id", "Ten", sanPham.IDLoaiSP);
             return View(sanPham);
         }
+
+
+
+
+
+
+
+
         // POST: SanPham/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -1,4 +1,6 @@
-﻿using doan_web.Models;
+﻿
+using doan_web.Controllers;
+using doan_web.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -113,24 +115,42 @@ namespace doan_web.Controllers
 
             return RedirectToAction("Index", "Cart");  // Redirect to Cart page after adding the product
         }
-
-        public IActionResult UpdateQuantity(int cartItemId, int newQuantity)
+        public class UpdateQuantityRequest
         {
-            var cartItem = _context.ChiTietGioHang.FirstOrDefault(c => c.MaGioHang == cartItemId);
+            public int CartItemId { get; set; }
+            public int NewQuantity { get; set; }
+        }
+        public IActionResult UpdateQuantity([FromBody] UpdateQuantityRequest request)
+        {
+            // Retrieve the cart item
+            var cartItem = _context.ChiTietGioHang.FirstOrDefault(c => c.MaGioHang == request.CartItemId);
 
-            if (cartItem == null || newQuantity < 1)
+            if (cartItem == null || request.NewQuantity < 1)
             {
-                return Json(new { success = false, message = "Không tìm thấy sản phẩm trong giỏ hàng hoặc số lượng không hợp lệ." });
+                return BadRequest(new { success = false, message = "Không tìm thấy sản phẩm trong giỏ hàng hoặc số lượng không hợp lệ." });
             }
 
-            // Update the quantity of the product
-            cartItem.SoLuong = newQuantity;
+            // Retrieve the product in the cart item
+            var product = _context.SanPham.FirstOrDefault(p => p.Id == cartItem.MaSP);
 
-            // Save changes to the cart item
+            if (product == null)
+            {
+                return BadRequest(new { success = false, message = "Sản phẩm không tồn tại." });
+            }
+
+            // Check if the requested quantity exceeds the available stock
+            if (request.NewQuantity > product.SoLuong)
+            {
+                return BadRequest(new { success = false, message = "Số lượng yêu cầu vượt quá số lượng trong kho." });
+            }
+
+            // Update the cart item quantity
+            cartItem.SoLuong = request.NewQuantity;
             _context.SaveChanges();
 
             // Recalculate the total price for the cart
-            var cart = _context.GioHang.Include(g => g.ChiTietGioHangs).FirstOrDefault(g => g.Id == cartItem.MaGioHang);
+            var cart = _context.GioHang.Include(g => g.ChiTietGioHangs)
+                                       .FirstOrDefault(g => g.Id == cartItem.MaGioHang);
 
             if (cart != null)
             {
@@ -138,40 +158,57 @@ namespace doan_web.Controllers
                     .Where(c => c.SanPham != null)
                     .Sum(c => (decimal)(c.SoLuong * (c.SanPham?.GiaBan ?? 0)));
 
-                // Save the updated cart with the recalculated total
                 _context.SaveChanges();
             }
 
-            return Json(new { success = true, message = "Cập nhật số lượng thành công." });
+            return Ok(new { success = true, message = "Cập nhật số lượng thành công." });
         }
 
 
 
-        public IActionResult XoaSanPham(int cartItemId)
+
+        [HttpPost]
+        public IActionResult XoaSanPham([FromBody] DeleteProductRequest request)
         {
-            var cartItem = _context.ChiTietGioHang.FirstOrDefault(c => c.MaGioHang == cartItemId);
+            // Ensure the request contains the MaSP
+            _logger.LogInformation($"Product ID: {request.MaSP}");
+
+            var userAccount = HttpContext.Session.GetString("TaiKhoan");
+
+            var customer = _context.KhachHang.FirstOrDefault(k => k.TaiKhoan == userAccount);
+
+            var cart = _context.GioHang
+                                .Include(g => g.ChiTietGioHangs)
+                                .ThenInclude(c => c.SanPham)
+                                .FirstOrDefault(g => g.MaKH == customer.Id);
+
+            // Find the cart item by product ID
+            var cartItem = cart?.ChiTietGioHangs.FirstOrDefault(c => c.SanPham.Id == request.MaSP);
 
             if (cartItem != null)
             {
-                var cart = _context.GioHang.Include(g => g.ChiTietGioHangs).FirstOrDefault(g => g.Id == cartItem.MaGioHang);
+                // Remove the item from the cart
+                cart.ChiTietGioHangs.Remove(cartItem);
 
-                if (cart != null)
-                {
-                    // Remove the cart item from the list of items in the cart
-                    cart.ChiTietGioHangs.Remove(cartItem);
+                // Recalculate the total price
+                cart.SoTien = cart.ChiTietGioHangs
+                    .Where(c => c.SanPham != null)
+                    .Sum(c => (decimal)(c.SoLuong * (c.SanPham?.GiaBan ?? 0)));
 
-                    // Recalculate the total price for the cart
-                    cart.SoTien = cart.ChiTietGioHangs
-                        .Where(c => c.SanPham != null)
-                        .Sum(c => (decimal)(c.SoLuong * (c.SanPham?.GiaBan ?? 0)));
-
-                    // Save changes
-                    _context.SaveChanges();
-                }
+                // Save the changes
+                _context.SaveChanges();
             }
 
             return Json(new { success = true });
         }
+
+        // Define a class to represent the request payload
+        public class DeleteProductRequest
+        {
+            public int MaSP { get; set; }
+        }
+
+
 
         [HttpPost]
         public ActionResult Checkout(IFormCollection frm)
@@ -242,7 +279,7 @@ namespace doan_web.Controllers
 
             string vnp_TxnRef = GetRandomNumber(8);
             string vnp_IpAddr = "127.0.0.1";
-            string vnp_TmnCode = "EKRUDLI9";
+            string vnp_TmnCode = "0S7T01T8";
 
             var vnp_Params = new Dictionary<string, string>
     {
@@ -288,7 +325,7 @@ namespace doan_web.Controllers
                 }
             }
 
-            string secretKey = "43DZY80MSHLDF5TI93OQKLB7LAQIOK2N";
+            string secretKey = "BEZLUPOPOTXTDYZHCBGDJBHFJPBLSARL";
             string secureHash = HmacSHA512(secretKey, hashData.ToString());
 
             query.Append("&vnp_SecureHash=").Append(secureHash);
@@ -347,85 +384,121 @@ namespace doan_web.Controllers
 
                 var response = _vnPayService.PaymentExecute(request);
 
-
-                string taiKhoan = HttpContext.Session.GetString("TaiKhoan");
-
-                if (string.IsNullOrEmpty(taiKhoan))
+                if (response.Success)
                 {
-                    return RedirectToAction("Login", "Home");
-                }
+                    string taiKhoan = HttpContext.Session.GetString("TaiKhoan");
 
-                KhachHang customer = _context.KhachHang
-                 .Include(g => g.GioHang)
-                 .ThenInclude(g => g.ChiTietGioHangs)
-                 .ThenInclude(d => d.SanPham)
-                 .FirstOrDefault(k => k.TaiKhoan == taiKhoan);
-
-                if (customer == null)
-                {
-                    return RedirectToAction("Login", "Home");
-                }
-
-                var gioHang = customer.GioHang;
-
-                if (gioHang == null || gioHang.ChiTietGioHangs.Count == 0)
-                {
-                    return Json(new { success = false, message = "Giỏ hàng của bạn hiện tại không có sản phẩm!" });
-                }
-
-                decimal totalAmount = gioHang.ChiTietGioHangs.Sum(item => item.SoLuong * item.DonGia);
-
-                this.address = HttpContext.Session.GetString("Address");
-                this.city = HttpContext.Session.GetString("City");
-                this.district = HttpContext.Session.GetString("District");
-                this.phone = HttpContext.Session.GetString("Phone");
-
-                // Create a new order for the customer
-                var order = new DonHang
-                {
-                    MaKH = customer.Id,
-                    TongTien = totalAmount,
-                    DiaChi = this.address,
-                    ThanhPho = this.city,
-                    QuanHuyen = this.district,
-                    SoDienThoai = this.phone,
-                    NgayDat = DateTime.Now,
-                    Status = -1
-                };
-
-                _context.DonHang.Add(order);
-                _context.SaveChanges();
-
-                List<ChiTietDonHang> orderItems = new List<ChiTietDonHang>();
-
-                foreach (var item in gioHang.ChiTietGioHangs)
-                {
-                    ChiTietDonHang chiTietDonHang = new ChiTietDonHang()
+                    if (string.IsNullOrEmpty(taiKhoan))
                     {
-                        MaDonHang = order.Id,
-                        MaSP = item.MaSP,
-                        SoLuong = item.SoLuong,
-                        DonGia = item.DonGia
+                        return RedirectToAction("Login", "Home");
+                    }
+
+                    KhachHang customer = _context.KhachHang
+                     .Include(g => g.GioHang)
+                     .ThenInclude(g => g.ChiTietGioHangs)
+                     .ThenInclude(d => d.SanPham)
+                     .FirstOrDefault(k => k.TaiKhoan == taiKhoan);
+
+                    if (customer == null)
+                    {
+                        return RedirectToAction("Login", "Home");
+                    }
+
+                    var gioHang = customer.GioHang;
+
+                    if (gioHang == null || gioHang.ChiTietGioHangs.Count == 0)
+                    {
+                        return Json(new { success = false, message = "Giỏ hàng của bạn hiện tại không có sản phẩm!" });
+                    }
+
+                    decimal totalAmount = gioHang.ChiTietGioHangs.Sum(item => item.SoLuong * item.DonGia);
+
+                    this.address = HttpContext.Session.GetString("Address");
+                    this.city = HttpContext.Session.GetString("City");
+                    this.district = HttpContext.Session.GetString("District");
+                    this.phone = HttpContext.Session.GetString("Phone");
+
+                    // Create a new order for the customer
+                    var order = new DonHang
+                    {
+                        MaKH = customer.Id,
+                        TongTien = totalAmount,
+                        DiaChi = this.address,
+                        ThanhPho = this.city,
+                        QuanHuyen = this.district,
+                        SoDienThoai = this.phone,
+                        NgayDat = DateTime.Now,
+                        Status = -1
                     };
 
-                    totalAmount += item.SoLuong * item.DonGia;
-                    _context.ChiTietDonHang.Add(chiTietDonHang);
-                    orderItems.Add(chiTietDonHang);
+                    _context.DonHang.Add(order);
+                    _context.SaveChanges();
+
+                    List<ChiTietDonHang> orderItems = new List<ChiTietDonHang>();
+
+                    foreach (var item in gioHang.ChiTietGioHangs)
+                    {
+                        ChiTietDonHang chiTietDonHang = new ChiTietDonHang()
+                        {
+                            MaDonHang = order.Id,
+                            MaSP = item.MaSP,
+                            SoLuong = item.SoLuong,
+                            DonGia = item.DonGia
+                        };
+
+                        // Add the order detail to the database
+                        _context.ChiTietDonHang.Add(chiTietDonHang);
+                        orderItems.Add(chiTietDonHang);
+
+                        // Get the product from the database
+                        var product = _context.SanPham.FirstOrDefault(p => p.Id == item.MaSP);
+
+                        if (product != null)
+                        {
+                            // Check if there is enough stock available
+                            if (product.SoLuong >= item.SoLuong)
+                            {
+                                // Subtract the quantity from the product's stock
+                                product.SoLuong -= item.SoLuong;
+
+                                // Update the product in the database
+                                _context.Update(product);
+                            }
+                            else
+                            {
+                                // Handle the case where the stock is not sufficient
+                                // You can return an error or perform other actions as needed
+                                return BadRequest(new { success = false, message = "Không đủ sản phẩm trong kho." });
+                            }
+                        }
+                        else
+                        {
+                            // Handle the case where the product doesn't exist
+                            return BadRequest(new { success = false, message = "Sản phẩm không tồn tại." });
+                        }
+                    }
+
+                    // Save changes to the database
+                    _context.SaveChanges();
+
+
+                    gioHang.ChiTietGioHangs.Clear();
+                    _context.SaveChanges();
+
+                    ViewBag.Message = "Thanh toán thành công!";
+                    ViewBag.OrderId = order.Id;
+                    ViewBag.OrderDate = order.NgayDat.ToString("dd/MM/yyyy");
+                    ViewBag.TotalAmount = totalAmount;
+                    ViewBag.OrderItems = orderItems; // Pass the order items to the view
+
+                    return View("PaymentSuccess"); // Redirect to success view
                 }
+                else
+                {
+                    ViewBag.Message = "Thanh toán thất bại.";
 
-                _context.SaveChanges();
-
-                gioHang.ChiTietGioHangs.Clear();
-                _context.SaveChanges();
-
-                ViewBag.Message = "Thanh toán thành công!";
-                ViewBag.OrderId = order.Id;
-                ViewBag.OrderDate = order.NgayDat.ToString("dd/MM/yyyy");
-                ViewBag.TotalAmount = totalAmount;
-                ViewBag.OrderItems = orderItems; // Pass the order items to the view
-
-                return View("PaymentSuccess"); // Redirect to success view
-
+                    return View("PaymentFail"); // Redirect to failure view
+                }
             }
             catch (Exception ex)
             {
