@@ -1,3 +1,8 @@
+insert into LoaiSanPham(Ten)
+values
+('Combo')
+
+
 INSERT INTO SanPham (Ten, SoLuong, GiaBan, IDLoaiSP, img, MoTa)
 VALUES
 ('Cheese Steak 200g', 50, 349000, 1, 'cheese-steak-elsol_55e1ba2b-39a4-4b09-8e57-6eeca42426a9.jpg', 'Bít tết phô mai béo ngậy, thịt bò mềm mịn tan chảy trong từng thớ cắt.'),
