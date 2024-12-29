@@ -28,7 +28,6 @@
 <body>
 
     <div>
-
         <!-- header section starts -->
         <header class="header_section">
             <div class="container">
@@ -69,7 +68,7 @@
                             <div class="user_option">
                                 <a href="/Cart/Index" class="order_online">
                                     <i class="fa fa-shopping-cart"></i> <!-- Icon giỏ hàng -->
-                                    <span id="cart-count">0</span>
+                                    <span id="cart-count"></span>
                                 </a>
                             </div>
                             <div class="user_option">
@@ -95,11 +94,7 @@
         </header>
     </div>
 
-    @RenderBody()
-
-
-
-
+    @RenderBody() <!-- Thêm phần nội dung của view vào đây -->
     <!-- Footer Section -->
     <footer class="footer_section">
         <div class="container">
@@ -152,7 +147,7 @@
                 <div class="col-md-4 footer-col">
                     <h4>Opening Hours</h4>
                     <p>Everyday</p>
-                    <p>10.00 Am -10.00 Pm</p>
+                    <p>10.00 AM - 10.00 PM</p>
                 </div>
             </div>
             <div class="footer-info">
@@ -172,5 +167,11 @@
     <script src="~/js/bootstrap.js"></script>
     <!-- Custom JS -->
     <script src="~/js/custom.js"></script>
+
+    <!-- Script để hiển thị năm hiện tại trong Footer -->
+    <script>
+        document.getElementById("displayYear").innerText = new Date().getFullYear();
+    </script>
+
 </body>
 </html>

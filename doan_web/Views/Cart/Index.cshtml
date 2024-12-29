@@ -25,21 +25,22 @@
     <!-- Responsive Style -->
     <link href="~/css/responsive.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 </head>
 <body>
     <!-- Header -->
     <header class="header_section">
         <div class="container">
             <nav class="navbar navbar-expand-lg custom_nav-container">
-                <a class="navbar-brand brand-name" href="index.html"><span>Elsol</span></a>
+                <a class="navbar-brand brand-name" href="/Home">
+                    <span>Elsol</span>
+                </a>
+
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item"><a class="nav-link" href="/Home">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="/Menu">Menu</a></li>
                         <li class="nav-item"><a class="nav-link" href="/Home/About">About</a></li>
                     </ul>
-                  
                 </div>
             </nav>
         </div>
@@ -64,25 +65,33 @@
                 <div>Xóa</div>
             </div>
 
-            @foreach (var item in Model.ChiTietGioHangs)
+            @if (Model.ChiTietGioHangs.Count == 0)
             {
-                <div class="cart-item">
-                    <div>@item.SanPham.Ten</div>
-                    <div>@item.SanPham.GiaBan</div>
-
-                    <div>
-                        <input type="number" id="quantity_@item.MaGioHang" value="@item.SoLuong" class="form-control"
-                               onchange="updateQuantity(@item.MaGioHang)">
-                    </div>
-                    <div>@(item.SoLuong * item.SanPham.GiaBan)</div>
-                    <div>
-                        <button onclick="deleteProduct(@item.MaSP)">Xóa</button>
-                    </div>
+                <div class="cart-empty" style="text-align: center; margin-top: 20px;">
+                   
                 </div>
+            }
+            else
+            {
+                @foreach (var item in Model.ChiTietGioHangs)
+                {
+                    <div class="cart-item">
+                        <div>@item.SanPham.Ten</div>
+                        <div>@item.SanPham.GiaBan</div>
+                        <div>
+                            <input type="number" id="quantity_@item.MaGioHang" value="@item.SoLuong" class="form-control"
+                                   onchange="updateQuantity(@item.MaGioHang)">
+                        </div>
+                        <div>@(item.SoLuong * item.SanPham.GiaBan)</div>
+                        <div>
+                            <button onclick="deleteProduct(@item.MaSP)">Xóa</button>
+                        </div>
+                    </div>
+                }
             }
 
             <div class="checkout-btn">
-                <button onclick="checkout()" class="btn">Mua hàng ngay</button>
+                <button onclick="handleCheckout()" class="btn">Mua hàng ngay</button>
             </div>
         </div>
     </div>
@@ -127,6 +136,7 @@
             <button type="submit" class="btn">Thanh Toán</button>
         </form>
     </div>
+
     <!-- Đặt hàng thành công -->
     <div class="container success-message" style="display: none; text-align: center; margin-top: 50px;">
         <h2>Đặt hàng thành công!</h2>
@@ -174,8 +184,18 @@
 
     <!-- Scripts -->
     <script>
-                function updateQuantity(cartItemId) {
-            var newQuantity = document.getElementById("quantity_" + cartItemId).value;
+        function handleCheckout() {
+            const cartItems = document.querySelectorAll('.cart-item');
+            if (cartItems.length === 0) {
+                alert("Giỏ hàng của bạn hiện đang trống. Vui lòng thêm sản phẩm trước khi thanh toán.");
+                return;
+            }
+            document.querySelector(".cart").style.display = "none"; // Ẩn giỏ hàng
+            document.querySelector(".checkout-form").style.display = "block"; // Hiện form thanh toán
+        }
+
+        function updateQuantity(cartItemId) {
+            const newQuantity = document.getElementById("quantity_" + cartItemId).value;
 
             if (newQuantity < 1) {
                 alert("Số lượng không hợp lệ!");
@@ -193,7 +213,7 @@
                 success: function (response) {
                     if (response.success) {
                         alert(response.message);
-                        location.reload(); // Optional: Refresh the page or update the UI dynamically
+                        location.reload();
                     } else {
                         alert(response.message);
                     }
@@ -203,7 +223,8 @@
                 }
             });
         }
-             function deleteProduct(MaSP) {
+
+        function deleteProduct(MaSP) {
             if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
                 $.ajax({
                     url: '/Cart/XoaSanPham',
@@ -215,7 +236,7 @@
                     success: function (response) {
                         if (response.success) {
                             alert("Sản phẩm đã được xóa khỏi giỏ hàng.");
-                            location.reload(); 
+                            location.reload();
                         } else {
                             alert("Không thể xóa sản phẩm.");
                         }
@@ -226,18 +247,6 @@
                 });
             }
         }
-
-        function checkout() {
-            document.querySelector(".cart").style.display = "none"; // Ẩn cart
-            document.querySelector(".checkout-form").style.display = "block"; // Hiện form
-        }
-
-        function submitOrder(event) {
-            event.preventDefault(); // Ngăn reload trang
-            document.querySelector(".checkout-form").style.display = "none"; // Ẩn form
-            document.querySelector(".success-message").style.display = "block"; // Hiển thị thông báo thành công
-        }
-
     </script>
 </body>
 </html>
